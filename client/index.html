@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>1:1 Call Demo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div class="wrap">
+    <h2>Lovechat Calls (Isolated)</h2>
+    <div class="controls">
+      <input id="roomId" placeholder="Room ID (e.g., couple-123)" />
+      <button id="joinBtn">Join</button>
+      <button id="leaveBtn" disabled>Leave</button>
+      <label><input type="checkbox" id="voiceOnly" /> Voice-only</label>
+      <button id="toggleMic" disabled>Mute</button>
+      <button id="toggleCam" disabled>Cam Off</button>
+      <button id="shareScreen" disabled>Share Screen</button>
+      <button id="switchCam" disabled>Switch Camera</button>
+      <span id="status"></span>
+    </div>
+    <div class="videos">
+      <video id="localVideo" autoplay playsinline muted></video>
+      <video id="remoteVideo" autoplay playsinline></video>
+    </div>
+    <pre id="log"></pre>
+  </div>
+  <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+  <script type="module" src="./app.js"></script>
+</body>
+</html>

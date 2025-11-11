@@ -1,0 +1,9 @@
+body { font-family: system-ui, sans-serif; margin:0; background:#0b1220; color:#dbe4ff; }
+.wrap { max-width: 1100px; margin: 24px auto; padding: 16px; }
+.controls { display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin-bottom:12px; }
+input, button { padding:8px 12px; border-radius:8px; border:1px solid #243b55; background:#10192b; color:#dbe4ff; }
+button:disabled { opacity:.5; }
+.videos { display:grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+video { width:100%; background:#000; border-radius:12px; border:1px solid #1c2e4a; }
+#status { margin-left:auto; font-size:12px; opacity:.8; }
+#log { background:#0a1526; border:1px solid #1b2d4a; padding:8px; height:160px; overflow:auto; }
