@@ -1,9 +1,119 @@
-body { font-family: system-ui, sans-serif; margin:0; background:#0b1220; color:#dbe4ff; }
-.wrap { max-width: 1100px; margin: 24px auto; padding: 16px; }
-.controls { display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin-bottom:12px; }
-input, button { padding:8px 12px; border-radius:8px; border:1px solid #243b55; background:#10192b; color:#dbe4ff; }
-button:disabled { opacity:.5; }
-.videos { display:grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-video { width:100%; background:#000; border-radius:12px; border:1px solid #1c2e4a; }
-#status { margin-left:auto; font-size:12px; opacity:.8; }
-#log { background:#0a1526; border:1px solid #1b2d4a; padding:8px; height:160px; overflow:auto; }
+:root{
+  --bg:#0b1220;
+  --glass:#0e1628cc;
+  --glass-weak:#0e162880;
+  --accent:#4fa1ff;
+  --text:#e6eeff;
+  --danger:#ff4f69;
+  --ok:#19c37d;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,Segoe UI,Inter,Roboto,sans-serif}
+
+.call-container{position:relative; width:100%; height:100vh; overflow:hidden; background:#000}
+
+/* Remote video full-bleed */
+.remote{
+  position:absolute; inset:0;
+  width:100%; height:100%;
+  object-fit:cover; background:#000;
+}
+
+/* Local preview bubble */
+.local-wrapper{
+  position:absolute; right:12px; bottom:12px;
+  width:128px; height:192px; max-width:35vw; max-height:35vh;
+  border-radius:16px; overflow:hidden;
+  border:1px solid #1b2d4a; background:#000; box-shadow:0 8px 32px #0008;
+  touch-action:none; /* for custom drag */
+}
+.local{width:100%; height:100%; object-fit:cover}
+
+/* Topbar */
+.topbar{
+  position:absolute; top:0; left:0; right:0;
+  padding:10px; display:flex; align-items:center; justify-content:space-between;
+  background:linear-gradient(180deg, var(--glass), transparent);
+  backdrop-filter: blur(6px);
+}
+.room-input{
+  padding:8px 12px; border-radius:12px; border:1px solid #243b55; background:#10192b; color:var(--text); min-width:180px;
+}
+.status-dot{margin-left:8px; font-size:12px; opacity:.9}
+.chip{padding:6px 10px; border-radius:12px; background:var(--glass); border:1px solid #243b55; color:var(--text)}
+.chip.small{font-size:12px; padding:4px 8px}
+.chip:disabled{opacity:.5}
+.topbar .left, .topbar .right{display:flex; gap:8px; align-items:center}
+
+/* Controls HUD */
+.controls{
+  position:absolute; left:0; right:0; bottom:16px;
+  display:flex; gap:12px; align-items:center; justify-content:center;
+  opacity:1; transition:opacity .25s ease, transform .25s ease;
+}
+.controls.hidden{opacity:0; pointer-events:none; transform:translateY(10px)}
+
+.pill{
+  display:flex; gap:10px; padding:8px; border-radius:999px;
+  background:var(--glass); backdrop-filter: blur(8px); border:1px solid #223554;
+}
+.icon{
+  width:44px; height:44px; display:grid; place-items:center;
+  background:var(--glass-weak); color:var(--text);
+  border:1px solid #223554; border-radius:50%; cursor:pointer;
+}
+.icon:disabled{opacity:.5}
+.fab{
+  width:54px; height:54px; display:grid; place-items:center;
+  border-radius:50%; border:none; cursor:pointer; color:white;
+  background:linear-gradient(180deg, #ff6b7d, var(--danger));
+  box-shadow:0 6px 20px rgba(255,79,105,.4);
+}
+.fab.danger{}
+
+/* Tap layer to show/hide controls */
+.touch-layer{
+  position:absolute; inset:0;
+  background:transparent; border:none; cursor:default;
+  outline:none;
+  pointer-events:auto;     /* allow tap for toggling */
+}
+
+/* But allow clicks to pass through topbar */
+.topbar, .topbar * {
+  pointer-events:auto !important;
+}
+
+
+/* Debug */
+.debug{position:absolute; left:12px; top:56px; max-width:60vw}
+.debug summary{cursor:pointer; background:var(--glass); padding:6px 10px; border-radius:8px; border:1px solid #223554}
+#log{max-height:160px; overflow:auto; margin-top:6px; background:#0a1526; border:1px solid #1b2d4a; padding:8px}
+
+/* Small screens */
+@media (max-width:520px){
+  .local-wrapper{width:104px; height:156px}
+  .room-input{min-width:140px}
+}
+
+/* Safe areas */
+@supports(padding:max(0px)){
+  .topbar{ padding-top: max(10px, env(safe-area-inset-top)); }
+  .controls{ margin-bottom: max(16px, env(safe-area-inset-bottom)); }
+}
+.topbar {
+  z-index: 20;
+}
+.controls {
+  z-index: 15;
+}
+.local-wrapper {
+  z-index: 10;
+}
+.touch-layer {
+  z-index: 5;
+}
+.remote {
+  z-index: 1;
+}
